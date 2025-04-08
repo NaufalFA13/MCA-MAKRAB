@@ -3,134 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Kehadiran MCA Makrab</title>
+  <title>Daftar Kehadiran</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(to right, #141e30, #243b55);
-      color: #fff;
-      margin: 0;
+      background: linear-gradient(to right, #1a1a1a, #333);
+      color: white;
       padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    h2 {
-      color: #ff4b2b;
       text-align: center;
-      margin-bottom: 20px;
     }
 
-    .table-container {
-      background: #1c1c1c;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-      width: 100%;
-      max-width: 800px;
-      overflow-x: auto;
+    h1 {
+      color: #ff4b2b;
     }
 
     table {
       width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
       border-collapse: collapse;
-      text-align: center;
-      color: #fff;
+      box-shadow: 0 0 15px red;
     }
 
     th, td {
-      padding: 12px;
-      border: 1px solid #ff4b2b;
+      border: 1px solid #888;
+      padding: 10px;
     }
 
     th {
       background-color: #ff4b2b;
     }
 
-    .add-button {
-      margin: 20px 0;
-      padding: 10px 20px;
-      background-color: #28a745;
+    tr:nth-child(even) {
+      background-color: #2c2c2c;
+    }
+
+    .btn-delete {
+      background: #ff0000;
       color: white;
       border: none;
-      border-radius: 5px;
-      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    .delete-button {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
+    .total {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      background-color: #1c1c1c;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+      display: inline-block;
+      color: #ff4b2b;
+      animation: pulse 1.2s infinite alternate;
     }
 
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-      .table-container {
-        padding: 10px;
-      }
+    @keyframes pulse {
+      from { text-shadow: 0 0 5px red; }
+      to { text-shadow: 0 0 15px red; }
     }
   </style>
 </head>
 <body>
-  <h2>Daftar Peserta MCA Makrab</h2>
-  <button class="add-button" onclick="window.location.href='form.html'">+ Tambah Peserta</button>
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Hadir</th>
-          <th>No. Telepon</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="tabelData">
-        <!-- Data akan ditampilkan di sini -->
-      </tbody>
-    </table>
-  </div>
+  <h1>List Kehadiran MCA Makrab</h1>
+  <table id="daftarTable">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Hadir</th>
+        <th>No Telp</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="total" id="totalPeserta"></div>
 
   <script>
-    function renderTabel() {
+    function renderTable() {
       const daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
-      const tbody = document.getElementById('tabelData');
+      const tbody = document.querySelector('#daftarTable tbody');
+      const totalPeserta = document.getElementById('totalPeserta');
       tbody.innerHTML = '';
 
-      if (daftar.length === 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = '<td colspan="4">Belum ada yang mendaftar</td>';
-        tbody.appendChild(row);
-      } else {
-        daftar.forEach((peserta, index) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${peserta.nama}</td>
-            <td>${peserta.hadir}</td>
-            <td>${peserta.telp}</td>
-            <td><button class="delete-button" onclick="hapusPeserta(${index})">Hapus</button></td>
-          `;
-          tbody.appendChild(row);
-        });
-      }
+      daftar.forEach((item, index) => {
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.nama}</td>
+          <td>${item.hadir}</td>
+          <td>${item.telp}</td>
+          <td><button class="btn-delete" onclick="hapusData(${index})">Hapus</button></td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      totalPeserta.innerHTML = `Total Pendaftar: ${daftar.length} orang`;
     }
 
-    function hapusPeserta(index) {
-      let daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
+    function hapusData(index) {
+      const daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
       daftar.splice(index, 1);
       localStorage.setItem('kehadiran', JSON.stringify(daftar));
-      renderTabel();
+      renderTable();
     }
 
-    renderTabel();
+    window.onload = renderTable;
   </script>
 </body>
 </html>
