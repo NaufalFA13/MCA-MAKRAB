@@ -3,118 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Kehadiran</title>
+  <title>List Kehadiran - MCA Makrab</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(to right, #1a1a1a, #333);
-      color: white;
+      background: linear-gradient(to right, #000000, #434343);
+      color: #fff;
       padding: 20px;
-      text-align: center;
+      margin: 0;
     }
 
     h1 {
+      text-align: center;
       color: #ff4b2b;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
-      max-width: 800px;
-      margin: 20px auto;
       border-collapse: collapse;
-      box-shadow: 0 0 15px red;
+      background-color: #1c1c1c;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     }
 
     th, td {
-      border: 1px solid #888;
-      padding: 10px;
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #444;
     }
 
     th {
       background-color: #ff4b2b;
     }
 
-    tr:nth-child(even) {
-      background-color: #2c2c2c;
-    }
-
-    .btn-delete {
-      background: #ff0000;
+    td button {
+      background: #ff4b2b;
       color: white;
       border: none;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
     }
 
     .total {
-      margin-top: 30px;
-      font-size: 1.3rem;
-      background-color: #1c1c1c;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
-      display: inline-block;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2rem;
       color: #ff4b2b;
-      animation: pulse 1.2s infinite alternate;
+      font-weight: bold;
+      animation: blink 1s infinite alternate;
     }
 
-    @keyframes pulse {
+    @keyframes blink {
       from { text-shadow: 0 0 5px red; }
-      to { text-shadow: 0 0 15px red; }
+      to { text-shadow: 0 0 20px red; }
+    }
+
+    @media screen and (max-width: 600px) {
+      th, td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>List Kehadiran MCA Makrab</h1>
-  <table id="daftarTable">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Nama</th>
-        <th>Hadir</th>
-        <th>No Telp</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div class="total" id="totalPeserta"></div>
+  <h1>Daftar Kehadiran MCA Makrab</h1>
+  <div class="container">
+    <table id="daftarTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Hadir</th>
+          <th>No. Telp</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="total" id="totalPeserta"></div>
+  </div>
 
   <script>
-    function renderTable() {
+    const tableBody = document.querySelector('#daftarTable tbody');
+    const totalPeserta = document.getElementById('totalPeserta');
+
+    function renderList() {
       const daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
-      const tbody = document.querySelector('#daftarTable tbody');
-      const totalPeserta = document.getElementById('totalPeserta');
-      tbody.innerHTML = '';
-
+      tableBody.innerHTML = '';
       daftar.forEach((item, index) => {
-        const tr = document.createElement('tr');
-
-        tr.innerHTML = `
+        const row = document.createElement('tr');
+        row.innerHTML = `
           <td>${index + 1}</td>
           <td>${item.nama}</td>
           <td>${item.hadir}</td>
           <td>${item.telp}</td>
-          <td><button class="btn-delete" onclick="hapusData(${index})">Hapus</button></td>
+          <td><button onclick="hapusData(${index})">Hapus</button></td>
         `;
-
-        tbody.appendChild(tr);
+        tableBody.appendChild(row);
       });
-
-      totalPeserta.innerHTML = `Total Pendaftar: ${daftar.length} orang`;
+      totalPeserta.textContent = `Total peserta yang mendaftar: ${daftar.length} orang`;
     }
 
     function hapusData(index) {
-      const daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
+      let daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
       daftar.splice(index, 1);
       localStorage.setItem('kehadiran', JSON.stringify(daftar));
-      renderTable();
+      renderList();
     }
 
-    window.onload = renderTable;
+    renderList();
   </script>
 </body>
 </html>
