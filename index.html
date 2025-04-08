@@ -3,153 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pendaftaran MCA Makrab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <title>Form Kehadiran MCA Makrab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Creepster&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Orbitron', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #000000, #434343);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
     h1 {
       color: #ff4b2b;
+      margin-bottom: 10px;
       text-align: center;
     }
 
     p {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #ccc;
       text-align: center;
-      margin-top: -10px;
-      margin-bottom: 30px;
+      max-width: 500px;
     }
 
     form {
-      background: #1c1c1c;
-      padding: 30px;
+      background-color: #1c1c1c;
+      padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      border: 1px solid #ff4b2b;
+      width: 100%;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      width: 100%;
-      max-width: 400px;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
     }
 
     label {
-      font-weight: bold;
+      font-size: 1rem;
+      color: #ff4b2b;
+      margin-bottom: 5px;
     }
 
     input[type="text"], input[type="tel"] {
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: 8px;
+      width: 100%;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
 
-    input[type="checkbox"] {
-      transform: scale(1.3);
-      margin-right: 10px;
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #2b2b2b;
+      border-radius: 8px;
+      border: 1px solid #444;
+      padding: 12px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      transform: scale(1.5);
+      accent-color: #ff4b2b;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      color: #ff4b2b;
     }
 
     button {
-      padding: 10px;
-      background-color: #ff4b2b;
-      color: white;
-      border: none;
-      border-radius: 8px;
+      padding: 12px;
+      font-size: 1rem;
       font-weight: bold;
+      background-color: #ff4b2b;
+      border: none;
+      border-radius: 10px;
+      color: white;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e6391b;
     }
 
     .popup {
+      font-family: 'Creepster', cursive;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      background: black;
+      border: 2px solid crimson;
+      color: crimson;
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 20px crimson;
       z-index: 999;
-      color: #ff0000;
-      font-size: 2rem;
-      font-family: 'Orbitron', sans-serif;
-      animation: fadeIn 0.5s ease-in-out;
+      display: none;
+      opacity: 0;
+      transition: all 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .popup.show {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    .popup span {
-      text-shadow: 0 0 10px red;
+    .popup.hide {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    .popup h2 {
+      font-size: 2.2rem;
+      letter-spacing: 1px;
     }
 
     .popup small {
-      font-size: 0.8rem;
-      color: #999;
+      display: block;
       margin-top: 20px;
+      font-size: 0.8rem;
+      color: #888;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.4rem; }
+      form { padding: 20px; }
+      input, button { font-size: 1rem; }
+      .checkbox-group { flex-direction: row; align-items: center; justify-content: start; }
+      .popup h2 { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
-  <h1>MCA Makrab</h1>
-  <p>Akan diadakan acara makrab pada <strong>11 April 2025 pukul 15:00</strong>. Pastikan kamu hadir!</p>
+  <h1>Form Kehadiran MCA Makrab</h1>
+  <p>Makrab akan diadakan pada <strong>11 April 2025</strong> pukul <strong>15:00 WIB</strong>. Jangan sampai ketinggalan!</p>
 
-  <form id="daftarForm">
-    <label for="nama">Nama:</label>
-    <input type="text" id="nama" name="nama" required>
+  <form id="form">
+    <div class="form-group">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" name="nama" required>
+    </div>
 
-    <label>
+    <div class="form-group checkbox-group">
       <input type="checkbox" id="hadir" name="hadir">
-      Hadir
-    </label>
+      <label for="hadir">Saya akan hadir</label>
+    </div>
 
-    <label for="telp">No. Telepon:</label>
-    <input type="tel" id="telp" name="telp" required>
+    <div class="form-group">
+      <label for="telp">No. Telepon:</label>
+      <input type="tel" id="telp" name="telp" required>
+    </div>
 
-    <button type="submit">Daftar</button>
+    <button type="submit">Kirim</button>
   </form>
 
+  <div class="popup" id="popup">
+    <h2>Kami tunggu kedatangan Anda...</h2>
+    <small>- made by opal</small>
+  </div>
+
+  <audio id="scarySound" src="https://www.myinstants.com/media/sounds/horror-sound-effect.mp3"></audio>
+
   <script>
-    const form = document.getElementById('daftarForm');
+    const form = document.getElementById('form');
+    const popup = document.getElementById('popup');
+    const audio = document.getElementById('scarySound');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw4fsd91sKWgCgXCjCb0oH2ywFmErmB0yWZTDgJWtLMf4vCAqe6XN7nFWQclY5t66072g/exec';
 
-    function showPopup() {
-      const popup = document.createElement('div');
-      popup.className = 'popup';
-      popup.innerHTML = `
-        <span>👁️‍🗨️ Kami tunggu kedatangan Anda...</span>
-        <small>- made by opal</small>
-      `;
-      document.body.appendChild(popup);
-
-      setTimeout(() => {
-        popup.remove();
-      }, 3000);
-    }
-
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', e => {
       e.preventDefault();
-
       const nama = document.getElementById('nama').value;
       const hadir = document.getElementById('hadir').checked ? 'Ya' : 'Tidak';
       const telp = document.getElementById('telp').value;
 
-      const data = { nama, hadir, telp };
-      let daftar = JSON.parse(localStorage.getItem('kehadiran')) || [];
-      daftar.push(data);
-      localStorage.setItem('kehadiran', JSON.stringify(daftar));
+      popup.classList.add('show');
+      audio.play();
 
-      showPopup();
-      form.reset();
+      fetch(scriptURL, {
+        method: 'POST',
+        body: new URLSearchParams({ nama, hadir, telp })
+      })
+      .then(() => {
+        setTimeout(() => {
+          popup.classList.add('hide');
+          setTimeout(() => {
+            popup.classList.remove('show', 'hide');
+          }, 500);
+        }, 4000);
+        form.reset();
+      })
+      .catch(err => alert('Terjadi kesalahan: ' + err.message));
     });
   </script>
 </body>
