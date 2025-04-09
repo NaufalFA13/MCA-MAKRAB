@@ -3,102 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Kehadiran MCA Makrab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <title>Daftar Kehadiran</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Orbitron', sans-serif;
       background-color: #1c1c1c;
-      color: #fff;
-      padding: 30px 10px;
-      text-align: center;
+      color: white;
+      padding: 20px;
+      margin: 0;
     }
 
     h1 {
+      text-align: center;
       color: #ff4422;
-      font-size: 2rem;
-      margin-bottom: 30px;
-      text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.6);
     }
 
-    table {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-      border-collapse: collapse;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-    }
-
-    thead {
-      background-color: #ff4422;
-    }
-
-    th, td {
-      padding: 14px 10px;
-      border-bottom: 1px solid #333;
-    }
-
-    th {
-      color: white;
-      font-weight: bold;
-    }
-
-    td {
-      color: #ddd;
-    }
-
-    button {
-      background-color: #ff4422;
-      color: #fff;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background-color: #e6371c;
-    }
-
-    .total {
-      margin-top: 25px;
-      font-size: 1.2rem;
+    #loading {
+      text-align: center;
       color: #ff4422;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.3);
+      font-size: 20px;
     }
 
-    .loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #1c1c1c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 9999;
-    }
-
-    .loader h2 {
-      color: #ff4422;
-      font-size: 1.5rem;
-      margin-top: 20px;
-      text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.5);
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #fff;
-      border-top: 5px solid #ff4422;
+    #spinner, #delete-spinner {
+      margin: 20px auto;
+      border: 4px solid #444;
+      border-top: 4px solid #ff4422;
       border-radius: 50%;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
+    }
+
+    #delete-spinner {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
     }
 
     @keyframes spin {
@@ -106,70 +49,164 @@
       100% { transform: rotate(360deg); }
     }
 
-    @media (max-width: 600px) {
-      th, td {
-        font-size: 0.85rem;
-        padding: 10px 6px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #333;
+      color: #ff4422;
+    }
+
+    tr:nth-child(even) {
+      background-color: #2a2a2a;
+    }
+
+    button.delete {
+      background-color: #ff4422;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button.delete:hover {
+      background-color: #e6371c;
+    }
+
+    @media screen and (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
       }
 
-      h1 {
-        font-size: 1.5rem;
+      thead tr {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #444;
+        padding: 10px;
+        background-color: #2a2a2a;
+      }
+
+      td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        text-align: left;
+        color: #ff4422;
+        font-weight: bold;
+        white-space: nowrap;
       }
     }
   </style>
 </head>
 <body>
-  <div class="loader" id="loader">
-    <div class="spinner"></div>
-    <h2>Memuat data...</h2>
+  <h1>Daftar Kehadiran</h1>
+  <div id="loading">
+    <div id="spinner"></div>
+    <div>Memuat data...</div>
   </div>
-
-  <h1>Daftar Kehadiran MCA Makrab</h1>
-  <table id="data-table">
+  <div id="delete-spinner"></div>
+  <table id="data-table" style="display:none">
     <thead>
       <tr>
         <th>No</th>
         <th>Nama</th>
-        <th>Hadir</th>
-        <th>No. Telp</th>
+        <th>Telepon</th>
+        <th>Kehadiran</th>
+        <th>Aksi</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="table-body"></tbody>
   </table>
-  <div class="total" id="total"></div>
+  <p id="total" style="text-align:center; color:#ff4422; margin-top:20px;"></p>
 
   <script>
-    const sheetURL = 'https://script.google.com/macros/s/AKfycbw4fsd91sKWgCgXCjCb0oH2ywFmErmB0yWZTDgJWtLMf4vCAqe6XN7nFWQclY5t66072g/exec';
+    const endpoint = "https://script.google.com/macros/s/AKfycby8uhrR0QfdLloWhEU73h2ZA8Rw83jM-KrjaTeCDdi2RY3M6VjHG6MuezhWzC9zX0y4mQ/exec";
 
-    async function fetchData() {
+    async function loadData() {
+      const table = document.getElementById("data-table");
+      const tbody = document.getElementById("table-body");
+      const loading = document.getElementById("loading");
+      const totalDisplay = document.getElementById("total");
+
       try {
-        const res = await fetch(sheetURL);
+        const res = await fetch(endpoint);
         const data = await res.json();
-        const tbody = document.querySelector("#data-table tbody");
-        tbody.innerHTML = "";
 
-        data.forEach((row, index) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${row.nama}</td>
-            <td>${row.hadir}</td>
-            <td>${row.telp}</td>
+        tbody.innerHTML = "";
+        data.forEach((item, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td data-label="No">${index + 1}</td>
+            <td data-label="Nama">${item.nama}</td>
+            <td data-label="Telepon">${item.telp || '-'}</td>
+            <td data-label="Kehadiran">${item.hadir}</td>
+            <td data-label="Aksi"><button class="delete" data-id="${item.id}">Hapus</button></td>
           `;
-          tbody.appendChild(tr);
+          tbody.appendChild(row);
         });
 
-        document.getElementById("total").textContent = `Total peserta yang mendaftar: ${data.length} orang`;
+        totalDisplay.textContent = `Total yang sudah mendaftar: ${data.length}`;
+        table.style.display = "table";
+        loading.style.display = "none";
 
-        // Sembunyikan loading screen setelah data siap
-        document.getElementById("loader").style.display = "none";
+        document.querySelectorAll("button.delete").forEach(button => {
+          button.addEventListener("click", async () => {
+            const id = button.getAttribute("data-id");
+            if (!confirm("Yakin ingin menghapus data ini?")) return;
+
+            const deleteSpinner = document.getElementById("delete-spinner");
+            deleteSpinner.style.display = "block";
+
+            const formData = new FormData();
+            formData.append("id", id);
+            formData.append("action", "delete");
+
+            try {
+              const res = await fetch(endpoint, {
+                method: "POST",
+                body: formData
+              });
+              const text = await res.text();
+              console.log(text);
+              await loadData();
+            } catch (error) {
+              alert("Gagal menghapus data.");
+              console.error("Delete error:", error);
+            } finally {
+              deleteSpinner.style.display = "none";
+            }
+          });
+        });
+
       } catch (error) {
-        console.error("Gagal memuat data:", error);
+        loading.textContent = "Gagal memuat data.";
+        console.error("Error fetching data:", error);
       }
     }
 
-    setInterval(fetchData, 1000);
-    fetchData();
+    window.onload = loadData;
   </script>
 </body>
 </html>
